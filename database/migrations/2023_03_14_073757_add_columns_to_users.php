@@ -14,10 +14,11 @@ class AddColumnsToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->decimal('balance', 10, 2)->default(0);
-            $table->unsignedBigInteger('roles_id');
-            $table->foreign('roles_id')->references('id')->on('roles');
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('account_id');
 
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('account_id')->references('id')->on('accounts');
         });
     }
 
@@ -29,9 +30,10 @@ class AddColumnsToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['balance']);
-            $table->dropForeign(['roles_id']);
-            $table->dropColumn(['roles_id']);
+            $table->dropForeign(['role_id']);
+            $table->dropColumn(['role_id']);
+            $table->dropForeign(['account_id']);
+            $table->dropColumn(['account_id']);
         });
     }
 }

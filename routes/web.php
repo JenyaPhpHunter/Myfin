@@ -18,7 +18,7 @@ use App\Http\Controllers\TransactionController;
 |
 */
 
-Route::get('/', [HomeController::class,'arbitrary'])->name('main');
+Route::get('/', [HomeController::class,'main'])->name('main');
 
 Route::resources([
     'users' => UserController::class,

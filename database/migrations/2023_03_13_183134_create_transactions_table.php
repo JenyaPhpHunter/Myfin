@@ -16,16 +16,19 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('users_id');
-            $table->decimal('amount', 10, 2);
-            $table->string('type');
+            $table->unsignedBigInteger('account_id');
             $table->timestamp('date');
-            $table->unsignedBigInteger('expenses_id');
-            $table->unsignedBigInteger('incomes_id');
+            $table->decimal('amount', 10, 2);
+            $table->string('type_transaction');
+            $table->unsignedBigInteger('category_id');
 
-            $table->foreign('expenses_id')->references('id')->on('expenses');
-            $table->foreign('incomes_id')->references('id')->on('incomes');
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')
+                ->on('accounts')
+                ->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
+
     }
 
     /**

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
-use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::query()->with('transaction')->orderBy('id', 'desc')->get();
-        return view('categories.index',[
-            "categories" => $categories,
+        $accounts = Account::query()->with('transaction')->orderBy('id', 'desc')->get();
+        return view('accounts.index',[
+            "accounts" => $accounts,
         ]);
     }
 
@@ -28,7 +27,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        return view('accounts.create');
     }
 
     /**
@@ -41,14 +40,21 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|unique:users|max:15',
+            'balance' => 'balance',
+            'currency_id' => 'required',
+            'user_id' => 'required',
         ]);
 
-        $category = new Category();
-        $category->name = $request->post('name');
+        $account = new Account();
+        $account->name = $request->post('name');
+        $account->balance = $request->post('balance');
+        $account->currency_id = $request->post('currency_id');
+        $account->user_id = $request->post('user_id');
+        $account->created_at = date("Y-m-d H:i:s");
 
-        $category->save();
+        $account->save();
 
-        return redirect(route('categories.index'));
+        return redirect(route('accounts.index'));
     }
 
     /**
@@ -59,10 +65,10 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::query()->with('transactions')
+        $account = Account::query()->with('user')->with('transaction')
             ->where('id',$id)->first();
-        return view('categories.show',[
-            'category' => $category,
+        return view('accounts.show',[
+            'account' => $account,
         ]);
     }
 
@@ -74,11 +80,11 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Account::query()->with('transactions')->where('id',$id)->first();
-        if(!$category){
+        $account = Account::query()->with('user')->where('id',$id)->first();
+        if(!$account){
             throw new \Exception('User not found');
         }
-        return view('categories.edit', ['category' => $category]);
+        return view('accounts.edit', ['account' => $account]);
     }
 
     /**
@@ -92,12 +98,19 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|unique:users|max:15',
+            'balance' => 'balance',
+            'currency_id' => 'required',
+            'user_id' => 'required',
         ]);
 
-        $category = new Category();
-        $category->name = $request->post('name');
+        $account = new Account();
+        $account->name = $request->post('name');
+        $account->balance = $request->post('balance');
+        $account->currency_id = $request->post('currency_id');
+        $account->user_id = $request->post('user_id');
+        $account->created_at = date("Y-m-d H:i:s");
 
-        $category->save();
+        $account->save();
 
         return redirect( route('accounts.show', ['account' => $id]));
     }
@@ -110,7 +123,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::query()->where('id',$id)->delete();
-        return redirect( route('categories.index'));
+        $account = Account::query()->where('id',$id)->delete();
+        return redirect( route('accounts.index'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -13,7 +14,10 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $transactions = Transaction::query()->with('transaction')->orderBy('id', 'desc')->get();
+        return view('transactions.index',[
+            "transactions" => $transactions,
+        ]);
     }
 
     /**
@@ -23,7 +27,7 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        return view('transactions.create');
     }
 
     /**
@@ -34,7 +38,22 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'amount' => 'required',
+            'type_transaction' => 'required',
+            'date' => 'required',
+        ]);
+
+        $transaction = new Transaction();
+        $transaction->user_id = $request->post('user_id');
+        $transaction->amount = $request->post('amount');
+        $transaction->type_transaction = $request->post('type');
+        $transaction->date = date("Y-m-d H:i:s");
+
+        $transaction->save();
+
+        return redirect(route('transactions.index'));
     }
 
     /**
@@ -45,7 +64,11 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::query()->with('users')
+            ->where('id',$id)->first();
+        return view('transactions.show',[
+            'transaction' => $transaction,
+        ]);
     }
 
     /**
@@ -56,7 +79,11 @@ class TransactionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $transaction = Role::query()->with('users')->with('categories')->where('id',$id)->first();
+        if(!$transaction){
+            throw new \Exception('User not found');
+        }
+        return view('transactions.edit', ['transaction' => $transaction]);
     }
 
     /**
@@ -68,7 +95,22 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'amount' => 'required',
+            'type_transaction' => 'required',
+            'date' => 'required',
+        ]);
+
+        $transaction = new Transaction();
+        $transaction->user_id = $request->post('user_id');
+        $transaction->amount = $request->post('amount');
+        $transaction->type_transaction = $request->post('type');
+        $transaction->date = date("Y-m-d H:i:s");
+
+        $transaction->save();
+
+        return redirect( route('transactions.show', ['transaction' => $id]));
     }
 
     /**
@@ -79,6 +121,7 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $transaction = Transaction::query()->where('id',$id)->delete();
+        return redirect( route('transactions.index'));
     }
 }

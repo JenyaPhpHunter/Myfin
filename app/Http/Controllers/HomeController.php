@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 class HomeController extends Controller
 {
-    public function arbitrary()
+    public function main()
     {
         return view('main');
     }

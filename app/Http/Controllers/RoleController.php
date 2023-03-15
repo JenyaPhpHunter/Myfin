@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -13,7 +15,10 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Account::query()->with('transaction')->orderBy('id', 'desc')->get();
+        return view('roles.index',[
+            "roles" => $roles,
+        ]);
     }
 
     /**
@@ -23,7 +28,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return view('roles.create');
     }
 
     /**
@@ -34,7 +39,16 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|unique:users|max:15',
+        ]);
+
+        $role = new Role();
+        $role->name = $request->post('name');
+
+        $role->save();
+
+        return redirect(route('roles.index'));
     }
 
     /**
@@ -45,7 +59,11 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role= Role::query()->with('users')
+            ->where('id',$id)->first();
+        return view('roles.show',[
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -56,7 +74,11 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::query()->with('users')->where('id',$id)->first();
+        if(!$role){
+            throw new \Exception('User not found');
+        }
+        return view('roles.edit', ['role' => $role]);
     }
 
     /**
@@ -68,7 +90,16 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|unique:users|max:15',
+        ]);
+
+        $role = new Role();
+        $role->name = $request->post('name');
+
+        $role->save();
+
+        return redirect( route('roles.show', ['role' => $id]));
     }
 
     /**
@@ -79,6 +110,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::query()->where('id',$id)->delete();
+        return redirect( route('roles.index'));
     }
 }

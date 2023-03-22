@@ -10,7 +10,7 @@ class TypeTransaction extends Model
         'name'
     ];
 
-    public function transactions()
+    public function transaction()
     {
         return $this->hasMany(Transaction::class);
     }

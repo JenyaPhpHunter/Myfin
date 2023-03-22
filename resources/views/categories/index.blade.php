@@ -1,6 +1,8 @@
   @extends('layouts.main')
 
   @section('content')
+      <a href="{{route('main')}}">Повернутися на головну сторінку</a>
+      <br>
       @php
           $name = 'Список категорій:';
       @endphp
@@ -14,7 +16,6 @@
                 <h2><a href="{{route('categories.show', ['category' => $category->id])}}">{{$category->name}}</a></h2>
 
                 <a href="{{ route('categories.edit',['category' => $category->id])}}">Редагувати категорію</a>
-                <br><br><br>
 {{--                <form id="delete-form-{{ $user->id }}" method="post">--}}
 {{--                    @csrf--}}
 {{--                    @method('delete')--}}

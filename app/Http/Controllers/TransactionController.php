@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -14,7 +17,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::query()->with('transaction')->orderBy('id', 'desc')->get();
+        $transactions = Transaction::query()->orderBy('id', 'desc')->get();
         return view('transactions.index',[
             "transactions" => $transactions,
         ]);
@@ -27,7 +30,16 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        return view('transactions.create');
+        $users = User::pluck('name', 'id');
+        $accounts = Account::pluck('name', 'id');
+        $categories = Category::pluck('name', 'id');
+        $types_transactions = ['дохід' , 'витрати'];
+        return view('transactions.create',[
+            "categories" => $categories,
+            "accounts" => $accounts,
+            "users" => $users,
+            'types_transactions' => $types_transactions
+        ]);
     }
 
     /**
@@ -40,16 +52,19 @@ class TransactionController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required',
+            'account_id' => 'required',
+            'my_datetime' => 'required',
             'amount' => 'required',
             'type_transaction' => 'required',
-            'date' => 'required',
         ]);
 
         $transaction = new Transaction();
         $transaction->user_id = $request->post('user_id');
+        $transaction->account_id = $request->post('account_id');
         $transaction->amount = $request->post('amount');
-        $transaction->type_transaction = $request->post('type');
-        $transaction->date = date("Y-m-d H:i:s");
+        $transaction->type_transaction = $request->post('type_transaction');
+        $transaction->category_id = $request->post('category_id');
+        $transaction->created_at =  $request->post('my_datetime');
 
         $transaction->save();
 
@@ -64,7 +79,7 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::query()->with('users')
+        $transaction = Transaction::query()->with('user')
             ->where('id',$id)->first();
         return view('transactions.show',[
             'transaction' => $transaction,
@@ -79,11 +94,21 @@ class TransactionController extends Controller
      */
     public function edit($id)
     {
-        $transaction = Role::query()->with('users')->with('categories')->where('id',$id)->first();
+        $users = User::pluck('name', 'id');
+        $accounts = Account::pluck('name', 'id');
+        $categories = Category::pluck('name', 'id');
+        $types_transactions = ['дохід' , 'витрати'];
+        $transaction = Transaction::query()->with('user')->with('category')->where('id',$id)->first();
         if(!$transaction){
             throw new \Exception('User not found');
         }
-        return view('transactions.edit', ['transaction' => $transaction]);
+        return view('transactions.edit', [
+            'transaction' => $transaction,
+            "categories" => $categories,
+            "accounts" => $accounts,
+            "users" => $users,
+            'types_transactions' => $types_transactions
+        ]);
     }
 
     /**
@@ -97,16 +122,19 @@ class TransactionController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required',
+            'account_id' => 'required',
+            'my_datetime' => 'required',
             'amount' => 'required',
             'type_transaction' => 'required',
-            'date' => 'required',
         ]);
 
-        $transaction = new Transaction();
+        $transaction = Transaction::query()->where('id',$id)->first();
         $transaction->user_id = $request->post('user_id');
+        $transaction->account_id = $request->post('account_id');
         $transaction->amount = $request->post('amount');
-        $transaction->type_transaction = $request->post('type');
-        $transaction->date = date("Y-m-d H:i:s");
+        $transaction->type_transaction = $request->post('type_transaction');
+        $transaction->category_id = $request->post('category_id');
+        $transaction->created_at =  $request->post('my_datetime');
 
         $transaction->save();
 

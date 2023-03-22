@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     protected $fillable = [
-        'name', 'balance', 'currency', 'user_id'
+        'name', 'balance'
     ];
 
-    public function users()
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

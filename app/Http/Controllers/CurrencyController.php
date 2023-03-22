@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
-use App\Models\Category;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CurrencyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::query()->orderBy('id', 'desc')->get();
-        return view('categories.index',[
-            "categories" => $categories,
+        $currencies = Currency::query()->orderBy('id')->get();
+        return view('currencies.index',[
+            "currencies" => $currencies,
         ]);
     }
 
@@ -28,7 +27,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        return view('currencies.create');
     }
 
     /**
@@ -40,15 +39,17 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|unique:currencies|max:35',
+            'symbol' => 'required|unique:currencies|max:35',
         ]);
 
-        $category = new Category();
-        $category->name = $request->post('name');
+        $currency = new Currency();
+        $currency->name = $request->post('name');
+        $currency->symbol = $request->post('symbol');
 
-        $category->save();
+        $currency->save();
 
-        return redirect(route('categories.index'));
+        return redirect(route('currencies.index'));
     }
 
     /**
@@ -59,9 +60,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::query()->where('id',$id)->first();
-        return view('categories.show',[
-            'category' => $category,
+        $currency= Currency::query()->where('id',$id)->first();
+        return view('currencies.show',[
+            'currency' => $currency,
         ]);
     }
 
@@ -73,11 +74,11 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::query()->where('id',$id)->first();
-        if(!$category){
-            throw new \Exception('Category not found');
+        $currency =Currency::query()->where('id',$id)->first();
+        if(!$currency){
+            throw new \Exception('Currency not found');
         }
-        return view('categories.edit', ['category' => $category]);
+        return view('currencies.edit', ['currency' => $currency]);
     }
 
     /**
@@ -89,16 +90,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // TODO
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|max:35',
+            'symbol' => 'required|max:35',
         ]);
 
-        $category = Category::query()->where('id',$id)->first();
-        $category->name = $request->post('name');
+        $currency = Currency::query()->where('id',$id)->first();
+        $currency->name = $request->post('name');
+        $currency->symbol = $request->post('symbol');
 
-        $category->save();
+        $currency->save();
 
-        return redirect( route('categories.show', ['category' => $id]));
+        return redirect( route('currencies.show', ['currency' => $id]));
     }
 
     /**
@@ -109,7 +113,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::query()->where('id',$id)->delete();
-        return redirect( route('categories.index'));
+        $currency = Currency::query()->where('id',$id)->delete();
+        return redirect( route('currencies.index'));
     }
 }

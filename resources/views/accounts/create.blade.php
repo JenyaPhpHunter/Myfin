@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Додавання користувача</h1>
+    <h1>Додавання рахунку</h1>
 
 {{--    @error('title')--}}
 {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
@@ -15,36 +15,39 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('users.store') }}">
+    <form method="post" action="{{ route('accounts.store') }}">
         @csrf
-        <label for="name">Ім'я</label>
+        <label for="name">Назва</label>
         <br>
         <input id="name" name="name">
         <br><br>
 
-        <label for="email">E-mail</label>
+        <label for="balance">Баланс рахунку</label>
         <br>
-        <input id="email" name="email">
+        <input id="balance" name="balance">
         <br><br>
 
-        <label for="password">Пароль</label>
+        <label for="currency_id">Валюта</label>
         <br>
-        <input id="password" name="password">
+        <select id="currency_id" name="currency_id">
+            @foreach($currencies as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </select>
         <br><br>
 
-        <label for="account_id">Рахунок</label>
+        <label for="user_id">Користувач</label>
         <br>
-        <input id="account_id" name="account_id">
+        <select id="user_id" name="user_id">
+            @foreach($users as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </select>
         <br><br>
 
-        <label for="role_id">Роль</label>
-        <br>
-        <input id="role_id" name="role_id">
-        <br><br>
-
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Зберегти">
         <span style="display: inline-block; width: 100px;"></span>
-        <a href="{{route('users.index')}}">Вернуться в список задач</a>
+        <a href="{{route('accounts.index')}}">Вернуться в список рахунків</a>
 
     </form>
 

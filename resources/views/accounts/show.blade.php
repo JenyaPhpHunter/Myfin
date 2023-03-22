@@ -1,27 +1,28 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Користувач № {{$user->id}}</h1>
+    <h1> Рахунок  № {{$account->id}}</h1>
     <div>
-        Ім'я: <b>{{$user->name}}</b>
+        Назва: <b>{{$account->name}}</b>
         <br>
-        E-MAIL: {{$user->email}}
+        Баланс рахунку: {{$account->balance}}
         <br>
-        Баланс: {{$user->balance}}
+        Валюта: {{$account->currency->name}}
+        <br>
+        Користувач: {{$account->user->name}}
         <br>
         <hr>
     </div>
     <div>
-        Дата реєстрації {{$user->created_at}}
+        Дата створення рахунку {{$account->created_at}}
     </div>
     <hr>
     <br>
-    <a href="{{route('users.index')}}">Повернутися у список користувіачів</a>
-    <br><br><br>
+    <a href="{{route('accounts.index')}}">Повернутися у список рахунків</a>
     <form id="delete-form-show" method="post">
         @csrf
         @method('delete')
-        <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        <a href="{{ route('accounts.destroy', ['account' => $account->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
     </form>
 @endsection
 

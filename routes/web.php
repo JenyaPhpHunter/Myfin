@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TransactionController;
 
@@ -22,9 +24,11 @@ Route::get('/', [HomeController::class,'main'])->name('main');
 
 Route::resources([
     'users' => UserController::class,
+    'accounts' => AccountController::class,
     'categories' => CategoryController::class,
+    'currencies' => CurrencyController::class,
     'roles' => RoleController::class,
-    'transaction' => TransactionController::class,
+    'transactions' => TransactionController::class,
 ]);
 
 

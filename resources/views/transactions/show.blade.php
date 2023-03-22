@@ -1,27 +1,31 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Користувач № {{$user->id}}</h1>
+    <h1>Транзакція № {{$transaction->id}}</h1>
     <div>
-        Ім'я: <b>{{$user->name}}</b>
+        Користувач: <b>{{$transaction->user->name}}</b>
         <br>
-        E-MAIL: {{$user->email}}
+        Рахунок: {{$transaction->account->name}}
         <br>
-        Баланс: {{$user->balance}}
+        Сума: {{$transaction->amount}}
+        <br>
+        Тип транзакції: {{$transaction->type_transaction}}
+        <br>
+        @if($transaction->type_transaction == 'витрати')
+            Категорія: {{$transaction->category->name}}
+        @endif
+        <br>
+        Дата та час транзакції: {{$transaction->created_at}}
         <br>
         <hr>
     </div>
-    <div>
-        Дата реєстрації {{$user->created_at}}
-    </div>
     <hr>
     <br>
-    <a href="{{route('users.index')}}">Повернутися у список користувіачів</a>
-    <br><br><br>
+    <a href="{{route('transactions.index')}}">Повернутися у список транзакцій</a>
     <form id="delete-form-show" method="post">
         @csrf
         @method('delete')
-        <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        <a href="{{ route('transactions.destroy', ['transaction' => $transaction->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
     </form>
 @endsection
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::query()->with('role')->orderBy('id', 'desc')->get();
+
         return view('users.index',[
             "users" => $users,
         ]);
@@ -29,7 +31,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::pluck('name', 'id');
+        return view('users.create', ["roles" => $roles,]);
     }
 
     /**
@@ -41,20 +44,19 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|max:30',
             'email' => 'required',
             'password' => 'required',
             'created_at' => 'nullable|date_format:Y-m-d H:i:s',
-            'role_id' => 'required',
+            'role' => 'required',
         ]);
 
         $user = new User();
         $user->name = $request->post('name');
         $user->email = $request->post('email');
         $user->password = $request->post('password');
-        $user->balance = $request->post('balance');
         $user->created_at = date("Y-m-d H:i:s");
-        $user->role_id = $request->post('role_id');
+        $user->role_id = $request->post('role');
 
         $user->save();
 
@@ -88,7 +90,8 @@ class UserController extends Controller
         if(!$user){
             throw new \Exception('User not found');
         }
-        return view('users.edit', ['user' => $user]);
+        $roles = Role::pluck('name', 'id');
+        return view('users.edit', ['user' => $user,"roles" => $roles]);
     }
 
     /**
@@ -101,20 +104,20 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|max:30',
             'email' => 'required',
             'password' => 'required',
-            'created_at' => 'nullable|date_format:Y-m-d H:i:s',
-            'role_id' => 'required',
+            'updated_at' => 'nullable|date_format:Y-m-d H:i:s',
+            'role' => 'required',
         ]);
 
         $user = User::query()->where('id',$id)->first();
         $user->name = $request->post('name');
         $user->email = $request->post('email');
         $user->password = $request->post('password');
-        $user->balance = $request->post('balance');
+        $user->password = $request->post('password');
         $user->created_at = date("Y-m-d H:i:s");
-        $user->role_id = $request->post('role_id');
+        $user->role_id = $request->post('role');
 
         $user->save();
 

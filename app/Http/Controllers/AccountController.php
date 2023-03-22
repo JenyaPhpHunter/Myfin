@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Currency;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -14,7 +16,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Account::query()->with('transaction')->orderBy('id', 'desc')->get();
+        $accounts = Account::query()->orderBy('id', 'desc')->get();
         return view('accounts.index',[
             "accounts" => $accounts,
         ]);
@@ -27,7 +29,9 @@ class AccountController extends Controller
      */
     public function create()
     {
-        return view('accounts.create');
+        $currencies = Currency::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+        return view('accounts.create', ["currencies" => $currencies, "users" => $users]);
     }
 
     /**
@@ -40,7 +44,7 @@ class AccountController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|unique:users|max:15',
-            'balance' => 'balance',
+            'balance' => 'required',
             'currency_id' => 'required',
             'user_id' => 'required',
         ]);
@@ -65,8 +69,7 @@ class AccountController extends Controller
      */
     public function show($id)
     {
-        $account = Account::query()->with('user')->with('transaction')
-            ->where('id',$id)->first();
+        $account = Account::query()->with('currency')->with('user')->where('id',$id)->first();
         return view('accounts.show',[
             'account' => $account,
         ]);
@@ -84,7 +87,9 @@ class AccountController extends Controller
         if(!$account){
             throw new \Exception('User not found');
         }
-        return view('accounts.edit', ['account' => $account]);
+        $currencies = Currency::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+        return view('accounts.edit', ['account' => $account, "currencies" => $currencies, "users" => $users]);
     }
 
     /**
@@ -97,13 +102,13 @@ class AccountController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
-            'balance' => 'balance',
+            'name' => 'required|max:15',
+            'balance' => 'required',
             'currency_id' => 'required',
             'user_id' => 'required',
         ]);
 
-        $account = new Account();
+        $account = Account::query()->where('id',$id)->first();
         $account->name = $request->post('name');
         $account->balance = $request->post('balance');
         $account->currency_id = $request->post('currency_id');

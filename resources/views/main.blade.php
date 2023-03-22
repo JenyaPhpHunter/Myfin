@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Myfin main page</title>
+    @foreach($tables as $name => $table)
+        <a href="{{ route($table.'.index') }}">{{ $name }}</a>
+        <br><br>
+        <hr>
+    @endforeach
 {{--    <style>--}}
 {{--        body {--}}
 {{--            color: black;--}}

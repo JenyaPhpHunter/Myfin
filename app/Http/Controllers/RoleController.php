@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
@@ -15,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Account::query()->with('transaction')->orderBy('id', 'desc')->get();
+        $roles = Role::query()->with('users')->orderBy('id')->get();
         return view('roles.index',[
             "roles" => $roles,
         ]);
@@ -40,7 +39,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|unique:roles|max:35',
         ]);
 
         $role = new Role();
@@ -90,11 +89,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // TODO
         $validated = $request->validate([
-            'name' => 'required|unique:users|max:15',
+            'name' => 'required|unique:roles|max:35',
         ]);
 
-        $role = new Role();
+        $role = Role::query()->where('id',$id)->first();
         $role->name = $request->post('name');
 
         $role->save();

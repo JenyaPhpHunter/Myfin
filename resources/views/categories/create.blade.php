@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Додавання користувача</h1>
+    <h1>Додавання категорії</h1>
 
 {{--    @error('title')--}}
 {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
@@ -15,34 +15,14 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('users.store') }}">
+    <form method="post" action="{{ route('categories.store') }}">
         @csrf
-        <label for="name">Ім'я</label>
+        <label for="name">Назва</label>
         <br>
         <input id="name" name="name">
         <br><br>
 
-        <label for="email">E-mail</label>
-        <br>
-        <input id="email" name="email">
-        <br><br>
-
-        <label for="password">Пароль</label>
-        <br>
-        <input id="password" name="password">
-        <br><br>
-
-        <label for="account_id">Рахунок</label>
-        <br>
-        <input id="account_id" name="account_id">
-        <br><br>
-
-        <label for="role_id">Роль</label>
-        <br>
-        <input id="role_id" name="role_id">
-        <br><br>
-
-        <input type="submit" value="Сохранить">
+        <input type="submit" value="Зберегти">
         <span style="display: inline-block; width: 100px;"></span>
         <a href="{{route('users.index')}}">Вернуться в список задач</a>
 

@@ -7,17 +7,14 @@
         <br>
         E-MAIL: {{$user->email}}
         <br>
-        Баланс: {{$user->balance}}
-        <br>
         <hr>
     </div>
     <div>
         Дата реєстрації {{$user->created_at}}
     </div>
     <hr>
-    <br>
+    <a href="{{ route('users.edit',['user' => $user->id])}}">Редагувати користувача</a>
     <a href="{{route('users.index')}}">Повернутися у список користувіачів</a>
-    <br><br><br>
     <form id="delete-form-show" method="post">
         @csrf
         @method('delete')

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Додавання ролі</h1>
+    <h1>Редагування валюти</h1>
 
     {{--    @error('title')--}}
     {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
@@ -15,17 +15,26 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('roles.store') }}">
+
+    <form method="post" action="{{ route('currencies.update', ['currency' => $currency->id]) }}">
         @csrf
+        @method('put')
         <label for="name">Назва</label>
         <br>
-        <input id="name" name="name">
+        <input id="name" name="name" value="{{$currency->name}}">
+        <br><br>
+
+        <label for="symbol">Символ</label>
+        <br>
+        <input id="symbol" name="symbol" value="{{$currency->symbol}}">
         <br><br>
 
         <input type="submit" value="Зберегти">
         <span style="display: inline-block; width: 100px;"></span>
-        <a href="{{route('users.index')}}">Вернуться в список задач</a>
+        <a href="{{route('currencies.index')}}">Повернутися до списку валют</a>
 
     </form>
-
 @endsection
+
+
+

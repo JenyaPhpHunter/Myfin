@@ -2,26 +2,31 @@
 
   @section('content')
       @php
-          $name = 'Список користувачів:';
+          $name = 'Список транзакцій:';
       @endphp
     <h1>{{$name}}</h1>
 <br><br>
-          <a href="{{ route('users.create') }}">Створити користувача</a>
+          <a href="{{ route('transactions.create') }}">Створити транзакцію</a>
 <div>
     <ul>
-        @foreach($users as $user)
-            <div class="user">
-                <h2><a href="{{route('users.show', ['user' => $user->id])}}">{{$user->name}}</a></h2>
-                <p>Email: {{ $user->email }}</p>
-                <p>Зареєстрований: {{ $user->created_at }}</p>
-                <p>Роль: {{ $user->role->name }}</p>
-{{--                @if($user->image)--}}
+        @foreach($transactions as $transaction)
+            <div class="transaction">
+                <h2><a href="{{route('transactions.show', ['transaction' => $transaction->id])}}">{{$transaction->id}}</a></h2>
+                <p>Користувач: {{ $transaction->user->name }}</p>
+                <p>Рахунок: {{ $transaction->account->name }}</p>
+                <p>Сума: {{ $transaction->amount }}</p>
+                <p>Тип транзакції: {{ $transaction->type_transaction }}</p>
+                @if($transaction->type_transaction == 'витрати')
+                    <p>Категорія: {{ $transaction->category->name }}</p>
+                @endif
+                <p>Дата та час транзакції: {{ $transaction->created_at }}</p>
+                {{--                @if($user->image)--}}
 {{--                    <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" width="200">--}}
 {{--                @else--}}
 {{--                    <p>No photo available</p>--}}
 {{--                @endif--}}
-                <a href="{{ route('users.edit',['user' => $user->id])}}">Редагувати користувача</a>
-                <br><br><br>
+                <a href="{{ route('transactions.edit',['transaction' => $transaction->id])}}">Редагувати транзакцію</a>
+
 {{--                <form id="delete-form-{{ $user->id }}" method="post">--}}
 {{--                    @csrf--}}
 {{--                    @method('delete')--}}

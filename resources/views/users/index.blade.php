@@ -1,6 +1,8 @@
   @extends('layouts.main')
 
   @section('content')
+      <a href="{{route('main')}}">Повернутися на головну сторінку</a>
+      <br>
       @php
           $name = 'Список користувачів:';
       @endphp
@@ -21,7 +23,6 @@
 {{--                    <p>No photo available</p>--}}
 {{--                @endif--}}
                 <a href="{{ route('users.edit',['user' => $user->id])}}">Редагувати користувача</a>
-                <br><br><br>
 {{--                <form id="delete-form-{{ $user->id }}" method="post">--}}
 {{--                    @csrf--}}
 {{--                    @method('delete')--}}

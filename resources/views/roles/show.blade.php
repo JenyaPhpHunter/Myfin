@@ -1,27 +1,19 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Користувач № {{$user->id}}</h1>
+    <h1>Роль № {{$role->id}}</h1>
     <div>
-        Ім'я: <b>{{$user->name}}</b>
-        <br>
-        E-MAIL: {{$user->email}}
-        <br>
-        Баланс: {{$user->balance}}
+        Назва: <b>{{$role->name}}</b>
         <br>
         <hr>
     </div>
-    <div>
-        Дата реєстрації {{$user->created_at}}
-    </div>
-    <hr>
     <br>
-    <a href="{{route('users.index')}}">Повернутися у список користувіачів</a>
+    <a href="{{route('roles.index')}}">Повернутися у список ролей</a>
     <br><br><br>
     <form id="delete-form-show" method="post">
         @csrf
         @method('delete')
-        <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        <a href="{{ route('roles.destroy', ['role' => $role->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
     </form>
 @endsection
 

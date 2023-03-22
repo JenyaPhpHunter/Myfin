@@ -16,14 +16,15 @@
         </div>
     @endif
 
-    <form method="post" action="{{ route('users.store') }}">
+    <form method="post" action="{{ route('users.update', ['user' => $user->id]) }}">
         @csrf
+        @method('put')
         <label for="name">Ім'я</label>
         <br>
         <input id="name" name="name" value="{{$user->name}}">
         <br><br>
 
-        <label for="email" @readonly(true)>E-mail</label>
+        <label for="email">E-mail</label>
         <br>
         <input id="email" name="email" value="{{$user->email}}">
         <br><br>
@@ -33,14 +34,13 @@
         <input id="password" name="password" value="{{$user->password}}">
         <br><br>
 
-        <label for="account_id">Рахунок</label>
+        <label for="role">Роль</label>
         <br>
-        <input id="account_id" name="account_id" value="{{$user->account_id}}">
-        <br><br>
-
-        <label for="role_id">Роль</label>
-        <br>
-        <input id="role_id" name="role_id" value="{{$user->role_id}}">
+        <select id="role" name="role">
+            @foreach($roles as $id => $name)
+                <option value="{{ $id }}" {{ $user->role_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+            @endforeach
+        </select>
         <br><br>
 
         <input type="submit" value="Зберегти">

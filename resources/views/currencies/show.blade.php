@@ -10,10 +10,12 @@
     </div>
     <br>
     <a href="{{route('currencies.index')}}">Повернутися у список валют</a>
-    <form id="delete-form-show" method="post">
-        @csrf
-        @method('delete')
-        <a href="{{ route('currencies.destroy', ['currency' => $currency->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
-    </form>
+    @if($user->role_id == 1)
+        <form id="delete-form-show" method="post">
+            @csrf
+            @method('delete')
+            <a href="{{ route('currencies.destroy', ['currency' => $currency->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        </form>
+    @endif
 @endsection
 

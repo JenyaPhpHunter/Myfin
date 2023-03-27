@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Currency;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CurrencyController extends Controller
 {
@@ -14,9 +15,11 @@ class CurrencyController extends Controller
      */
     public function index()
     {
+        $auth_user = Auth::user();
         $currencies = Currency::query()->orderBy('id')->get();
         return view('currencies.index',[
             "currencies" => $currencies,
+            "user" => $auth_user,
         ]);
     }
 
@@ -60,9 +63,11 @@ class CurrencyController extends Controller
      */
     public function show($id)
     {
+        $auth_user = Auth::user();
         $currency= Currency::query()->where('id',$id)->first();
         return view('currencies.show',[
             'currency' => $currency,
+            'user' => $auth_user,
         ]);
     }
 
@@ -90,7 +95,6 @@ class CurrencyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // TODO
         $validated = $request->validate([
             'name' => 'required|max:35',
             'symbol' => 'required|max:35',

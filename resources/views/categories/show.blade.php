@@ -9,10 +9,12 @@
     </div>
     <br>
     <a href="{{route('categories.index')}}">Повернутися у список категорій</a>
-    <form id="delete-form-show" method="post">
-        @csrf
-        @method('delete')
-        <a href="{{ route('categories.destroy', ['category' => $category->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
-    </form>
+    @if($user->role_id == 1)
+        <form id="delete-form-show" method="post">
+            @csrf
+            @method('delete')
+            <a href="{{ route('categories.destroy', ['category' => $category->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        </form>
+    @endif
 @endsection
 

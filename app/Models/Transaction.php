@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'amount', 'type', 'description'
+        'amount', 'type_transaction'
     ];
 
     public function user()
@@ -21,5 +21,9 @@ class Transaction extends Model
     public function account()
     {
         return $this->belongsTo(Account::class);
+    }
+    public function typeTransaction()
+    {
+        return $this->belongsTo(TypeTransaction::class);
     }
 }

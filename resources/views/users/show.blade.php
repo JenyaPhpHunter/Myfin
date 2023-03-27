@@ -7,6 +7,8 @@
         <br>
         E-MAIL: {{$user->email}}
         <br>
+        Повноваження: {{$user->role->name}}
+        <br>
         <hr>
     </div>
     <div>
@@ -14,11 +16,17 @@
     </div>
     <hr>
     <a href="{{ route('users.edit',['user' => $user->id])}}">Редагувати користувача</a>
-    <a href="{{route('users.index')}}">Повернутися у список користувіачів</a>
+    <br><br><br>
+    @if($user->role_id == 1)
+        <a href="{{route('users.index')}}">Повернутися до списку користувачів</a>
+        <br><br><br>
+    @endif
     <form id="delete-form-show" method="post">
         @csrf
         @method('delete')
         <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
     </form>
+    <br><br>
+    <a href="{{route('main')}}">Повернутися на головну</a>
 @endsection
 

@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -29,12 +35,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
-    public function create()
-    {
-        $roles = Role::pluck('name', 'id');
-        return view('users.create', ["roles" => $roles,]);
-    }
 
+    protected function create(array $data)
+    {
+        return User::create($data);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -44,7 +49,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|max:30',
             'email' => 'required',
             'password' => 'required',
             'created_at' => 'nullable|date_format:Y-m-d H:i:s',
@@ -57,6 +61,7 @@ class UserController extends Controller
         $user->password = $request->post('password');
         $user->created_at = date("Y-m-d H:i:s");
         $user->role_id = $request->post('role');
+        $user->default_currency_id = $request->post('default_currency_id');
 
         $user->save();
 
@@ -104,7 +109,6 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|max:30',
             'email' => 'required',
             'password' => 'required',
             'updated_at' => 'nullable|date_format:Y-m-d H:i:s',
@@ -114,10 +118,10 @@ class UserController extends Controller
         $user = User::query()->where('id',$id)->first();
         $user->name = $request->post('name');
         $user->email = $request->post('email');
-        $user->password = $request->post('password');
-        $user->password = $request->post('password');
+        $user->password =  Hash::make($request->post('password'));
         $user->created_at = date("Y-m-d H:i:s");
         $user->role_id = $request->post('role');
+//        $user->default_currency_id = $request->post('default_currency_id');
 
         $user->save();
 
@@ -135,4 +139,5 @@ class UserController extends Controller
         $user = User::query()->where('id',$id)->delete();
         return redirect( route('users.index'));
     }
+
 }

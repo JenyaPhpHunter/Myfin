@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\TypeTransaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -17,9 +19,16 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::query()->orderBy('id', 'desc')->get();
+        $transactions = Transaction::query()->orderByDesc('created_at')->get();
+        $auth_user = Auth::user();
+        $accounts = Account::query()->where('user_id', $auth_user->id)->get();
+        $sum_balance = 0;
+        foreach ($accounts as $account){
+            $sum_balance += $account->balance;
+        }
         return view('transactions.index',[
             "transactions" => $transactions,
+            "sum_balance" => $sum_balance,
         ]);
     }
 
@@ -30,15 +39,17 @@ class TransactionController extends Controller
      */
     public function create()
     {
+        $auth_user = Auth::user();
         $users = User::pluck('name', 'id');
         $accounts = Account::pluck('name', 'id');
         $categories = Category::pluck('name', 'id');
-        $types_transactions = ['дохід' , 'витрати'];
+        $types_transactions = TypeTransaction::pluck('name', 'id');
         return view('transactions.create',[
             "categories" => $categories,
             "accounts" => $accounts,
             "users" => $users,
-            'types_transactions' => $types_transactions
+            'types_transactions' => $types_transactions,
+            'auth_user' => $auth_user
         ]);
     }
 
@@ -68,6 +79,14 @@ class TransactionController extends Controller
 
         $transaction->save();
 
+        $account = Account::query()->where('id', $transaction->account_id)->first();
+        if($transaction->type_transaction == 1){
+            $account->balance = $account->balance + $transaction->amount;
+        } else {
+            $account->balance = $account->balance - $transaction->amount;
+        }
+        $account->save();
+
         return redirect(route('transactions.index'));
     }
 
@@ -94,10 +113,11 @@ class TransactionController extends Controller
      */
     public function edit($id)
     {
+        $auth_user = Auth::user();
         $users = User::pluck('name', 'id');
         $accounts = Account::pluck('name', 'id');
         $categories = Category::pluck('name', 'id');
-        $types_transactions = ['дохід' , 'витрати'];
+        $types_transactions = TypeTransaction::pluck('name', 'id');
         $transaction = Transaction::query()->with('user')->with('category')->where('id',$id)->first();
         if(!$transaction){
             throw new \Exception('User not found');
@@ -107,6 +127,7 @@ class TransactionController extends Controller
             "categories" => $categories,
             "accounts" => $accounts,
             "users" => $users,
+            "auth_user" => $auth_user,
             'types_transactions' => $types_transactions
         ]);
     }

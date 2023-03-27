@@ -3,9 +3,6 @@
 @section('content')
     <h1>Редагування транзакції</h1>
 
-    {{--    @error('title')--}}
-    {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
-    {{--    @enderror--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -21,11 +18,11 @@
         @method('put')
         <label for="user_id">Користувач</label>
         <br>
-        <select id="user_id" name="user_id">
-            @foreach($users as $id => $name)
-                <option value="{{ $id }}" {{ $transaction->user_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-            @endforeach
-        </select>
+        <input id="user_id" name="user_id"
+               @if($auth_user->name) placeholder="{{$auth_user->name}}"
+               @else placeholder="{{$auth_user->email}}"
+               @endif
+               readonly>
         <br><br>
 
         <label for="account_id">Рахунок</label>
@@ -58,13 +55,13 @@
         <label for="type_transaction">Тип транзакції</label>
         <br>
         <select id="type_transaction" name="type_transaction">
-            @foreach($types_transactions as $name)
-                <option value="{{ $name }}" {{ $transaction->type_transaction == $name ? 'selected' : '' }}>{{ $name }}</option>
+            @foreach($types_transactions as $id => $name)
+                <option value="{{ $id }}" {{ $transaction->type_transaction == $id ? 'selected' : '' }}>{{ $name }}</option>
             @endforeach
         </select>
         <br><br>
 
-        <div id="category-field" @if($transaction->type_transaction == 'дохід') style="display: none; @endif">
+        <div id="category-field" @if($transaction->type_transaction == '1') style="display: none; @endif">
             <label for="category_id">Категорія</label>
             <br>
             <select id="category_id" name="category_id">
@@ -84,7 +81,7 @@
             // при зміні значення поля вибору типу транзакції
             typeTransactionSelect.addEventListener('change', function() {
                 // перевіряємо, який тип транзакції був вибраний
-                if (typeTransactionSelect.value === 'витрати') {
+                if (typeTransactionSelect.value === '2') {
                     // якщо тип транзакції - витрата, то відображаємо поле вибору категорії
                     categoryField.style.display = 'block';
                 } else {

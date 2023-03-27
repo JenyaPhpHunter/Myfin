@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -15,9 +16,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $auth_user = Auth::user();
         $categories = Category::query()->orderBy('id', 'desc')->get();
         return view('categories.index',[
             "categories" => $categories,
+            "user" => $auth_user,
         ]);
     }
 
@@ -59,9 +62,11 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
+        $auth_user = Auth::user();
         $category = Category::query()->where('id',$id)->first();
         return view('categories.show',[
             'category' => $category,
+            'user' => $auth_user,
         ]);
     }
 

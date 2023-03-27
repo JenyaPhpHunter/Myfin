@@ -10,10 +10,12 @@
     <br>
     <a href="{{route('roles.index')}}">Повернутися у список ролей</a>
     <br><br><br>
-    <form id="delete-form-show" method="post">
-        @csrf
-        @method('delete')
-        <a href="{{ route('roles.destroy', ['role' => $role->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
-    </form>
+    @if($user->role_id == 1)
+        <form id="delete-form-show" method="post">
+            @csrf
+            @method('delete')
+            <a href="{{ route('roles.destroy', ['role' => $role->id]) }}" onclick="document.getElementById('delete-form-show').submit(); return false;">Видалити</a>
+        </form>
+    @endif
 @endsection
 

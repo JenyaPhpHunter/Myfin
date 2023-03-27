@@ -1,6 +1,9 @@
   @extends('layouts.main')
 
   @section('content')
+      <a href="{{route('main')}}">Повернутися на головну сторінку</a>
+      <br>
+          Загальний баланс по всім Вашим рахункам = {{ $sum_balance }} (нажаль не враховуючи валюту)
       @php
           $name = 'Список транзакцій:';
       @endphp
@@ -12,26 +15,20 @@
         @foreach($transactions as $transaction)
             <div class="transaction">
                 <h2><a href="{{route('transactions.show', ['transaction' => $transaction->id])}}">{{$transaction->id}}</a></h2>
+                @if($transaction->user->name)
                 <p>Користувач: {{ $transaction->user->name }}</p>
+                @else
+                <p>Користувач: {{ $transaction->user->email }}</p>
+                @endif
                 <p>Рахунок: {{ $transaction->account->name }}</p>
                 <p>Сума: {{ $transaction->amount }}</p>
                 <p>Тип транзакції: {{ $transaction->type_transaction }}</p>
-                @if($transaction->type_transaction == 'витрати')
+                @if($transaction->type_transaction == 2)
                     <p>Категорія: {{ $transaction->category->name }}</p>
                 @endif
                 <p>Дата та час транзакції: {{ $transaction->created_at }}</p>
-                {{--                @if($user->image)--}}
-{{--                    <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" width="200">--}}
-{{--                @else--}}
-{{--                    <p>No photo available</p>--}}
-{{--                @endif--}}
-                <a href="{{ route('transactions.edit',['transaction' => $transaction->id])}}">Редагувати транзакцію</a>
 
-{{--                <form id="delete-form-{{ $user->id }}" method="post">--}}
-{{--                    @csrf--}}
-{{--                    @method('delete')--}}
-{{--                    <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-{{ $user->id }}').submit(); return false;">Видалити</a>--}}
-{{--                </form>--}}
+                <a href="{{ route('transactions.edit',['transaction' => $transaction->id])}}">Редагувати транзакцію</a>
                 <hr>
             </div>
         @endforeach

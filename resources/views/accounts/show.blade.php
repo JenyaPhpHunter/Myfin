@@ -1,6 +1,9 @@
 @extends('layouts.main')
 
 @section('content')
+    @php
+    $user = session('user');
+    @endphp
     <h1> Рахунок  № {{$account->id}}</h1>
     <div>
         Назва: <b>{{$account->name}}</b>
@@ -9,8 +12,11 @@
         <br>
         Валюта: {{$account->currency->name}}
         <br>
-        Користувач: {{$account->user->name}}
-        <br>
+        @if($account->user->name)
+            <p>Користувач: {{ $account->user->name }}</p>
+        @else
+            <p>Користувач: {{ $account->user->email }}</p>
+        @endif
         <hr>
     </div>
     <div>

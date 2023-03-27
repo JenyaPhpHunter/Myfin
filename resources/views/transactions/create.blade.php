@@ -2,10 +2,6 @@
 
 @section('content')
     <h1>Додавання транзакції</h1>
-
-{{--    @error('title')--}}
-{{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
-{{--    @enderror--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -19,11 +15,12 @@
         @csrf
         <label for="user_id">Користувач</label>
         <br>
-        <select id="user_id" name="user_id">
-            @foreach($users as $id => $name)
-                <option value="{{ $id }}">{{ $name }}</option>
-            @endforeach
-        </select>
+        <input id="user_id" name="user_id"
+               @if($auth_user->name) placeholder="{{$auth_user->name}}"
+               @else placeholder="{{$auth_user->email}}"
+               @endif
+               readonly>
+        <input type="hidden" name="user_id" value="{{$auth_user->id}}">
         <br><br>
 
         <label for="account_id">Рахунок</label>
@@ -56,8 +53,8 @@
         <label for="type_transaction">Тип транзакції</label>
         <br>
         <select id="type_transaction" name="type_transaction">
-            @foreach($types_transactions as $name)
-                <option value="{{ $name }}">{{ $name }}</option>
+            @foreach($types_transactions as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
             @endforeach
         </select>
         <br><br>
@@ -82,7 +79,7 @@
             // при зміні значення поля вибору типу транзакції
             typeTransactionSelect.addEventListener('change', function() {
                 // перевіряємо, який тип транзакції був вибраний
-                if (typeTransactionSelect.value === 'витрати') {
+                if (typeTransactionSelect.value === '2') {
                     // якщо тип транзакції - витрата, то відображаємо поле вибору категорії
                     categoryField.style.display = 'block';
                 } else {

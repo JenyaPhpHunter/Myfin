@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTypesTransactionTable extends Migration
+class CreateTypeTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +14,15 @@ class CreateTypesTransactionTable extends Migration
      */
     public function up()
     {
-        Schema::create('types_transaction', function (Blueprint $table) {
+        Schema::create('type_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
+        DB::table('type_transactions')->insert([
+            ['name' => 'Дохід'],
+            ['name' => 'Витрати'],
+        ]);
     }
 
     /**

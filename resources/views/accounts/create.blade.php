@@ -1,11 +1,10 @@
 @extends('layouts.main')
 
 @section('content')
+    @php
+        $user = session('user');
+    @endphp
     <h1>Додавання рахунку</h1>
-
-{{--    @error('title')--}}
-{{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
-{{--    @enderror--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -30,19 +29,26 @@
         <label for="currency_id">Валюта</label>
         <br>
         <select id="currency_id" name="currency_id">
+            @if ($defaultCurrencyId)
+                <option value="{{ $defaultCurrencyId }}" selected>{{ $defaultCurrencyName }}</option>
+            @endif
+
             @foreach($currencies as $id => $name)
-                <option value="{{ $id }}">{{ $name }}</option>
+                @if ($id != $defaultCurrencyId)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endif
             @endforeach
         </select>
         <br><br>
 
         <label for="user_id">Користувач</label>
         <br>
-        <select id="user_id" name="user_id">
-            @foreach($users as $id => $name)
-                <option value="{{ $id }}">{{ $name }}</option>
-            @endforeach
-        </select>
+        <input id="user_id" name="user_id"
+               @if($auth_user->name) placeholder="{{$auth_user->name}}"
+               @else placeholder="{{$auth_user->email}}"
+               @endif
+               readonly>
+        <input type="hidden" name="user_id" value="{{$auth_user->id}}">
         <br><br>
 
         <input type="submit" value="Зберегти">

@@ -1,11 +1,8 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Редагування користувача</h1>
+    <h1>Редагування рахунку</h1>
 
-    {{--    @error('title')--}}
-    {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
-    {{--    @enderror--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -31,34 +28,21 @@
 
         <label for="currency_id">Валюта</label>
         <br>
-        <select id="currency_id" name="currency_id">
-            @foreach($currencies as $id => $name)
-                <option value="{{ $id }}" {{ $account->currency_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-            @endforeach
-        </select>
+        <input id="currency_id" name="currency_id" value="{{ $account->currency->name }}" readonly>
         <br><br>
 
         <label for="user_id">Користувач</label>
         <br>
-        <select id="user_id" name="user_id">
-            @foreach($users as $id => $name)
-                <option value="{{ $id }}" {{ $account->user_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-            @endforeach
-        </select>
+        <input id="user_id" name="user_id"
+               @if($auth_user->name) placeholder="{{$auth_user->name}}"
+               @else placeholder="{{$auth_user->email}}"
+               @endif
+               readonly>
         <br><br>
-{{--        <label for="curency_id">Валюта</label>--}}
-{{--        <br>--}}
-{{--        <input id="curency_id" name="curency_id" value={{ $account->curency_id }}>--}}
-{{--        <br><br>--}}
-
-{{--        <label for="user_id" @readonly(true)>Користувач</label>--}}
-{{--        <br>--}}
-{{--        <input id="user_id" name="user_id" value={{ $account->user_id }}>--}}
-{{--        <br><br>--}}
 
         <input type="submit" value="Зберегти">
         <span style="display: inline-block; width: 100px;"></span>
-        <a href="{{route('accounts.index')}}">Вернуться в список задач</a>
+        <a href="{{route('accounts.index')}}">Повернутися в список рахунків</a>
 
     </form>
 @endsection

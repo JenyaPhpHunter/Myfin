@@ -2,10 +2,6 @@
 
 @section('content')
     <h1>Редагування валюти</h1>
-
-    {{--    @error('title')--}}
-    {{--    <div class="alert alert-danger">Title - обязательное поле</div>--}}
-    {{--    @enderror--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

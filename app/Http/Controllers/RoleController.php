@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -14,9 +15,11 @@ class RoleController extends Controller
      */
     public function index()
     {
+        $auth_user = Auth::user();
         $roles = Role::query()->with('users')->orderBy('id')->get();
         return view('roles.index',[
             "roles" => $roles,
+            "user" => $auth_user,
         ]);
     }
 
@@ -58,10 +61,12 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        $auth_user = Auth::user();
         $role= Role::query()->with('users')
             ->where('id',$id)->first();
         return view('roles.show',[
             'role' => $role,
+            'user' => $auth_user,
         ]);
     }
 
@@ -89,7 +94,6 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // TODO
         $validated = $request->validate([
             'name' => 'required|unique:roles|max:35',
         ]);

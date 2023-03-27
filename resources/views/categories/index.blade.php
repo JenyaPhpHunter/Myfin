@@ -14,13 +14,9 @@
         @foreach($categories as $category)
             <div class="user">
                 <h2><a href="{{route('categories.show', ['category' => $category->id])}}">{{$category->name}}</a></h2>
-
-                <a href="{{ route('categories.edit',['category' => $category->id])}}">Редагувати категорію</a>
-{{--                <form id="delete-form-{{ $user->id }}" method="post">--}}
-{{--                    @csrf--}}
-{{--                    @method('delete')--}}
-{{--                    <a href="{{ route('users.destroy', ['user' => $user->id]) }}" onclick="document.getElementById('delete-form-{{ $user->id }}').submit(); return false;">Видалити</a>--}}
-{{--                </form>--}}
+                @if($user->role_id == 1)
+                    <a href="{{ route('categories.edit',['category' => $category->id])}}">Редагувати категорію</a>
+                @endif
                 <hr>
             </div>
         @endforeach
